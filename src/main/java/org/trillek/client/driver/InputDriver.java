@@ -36,8 +36,11 @@ public class InputDriver implements Subsystem {
 	//The Set of Registered Keys we are listening too
 	private Set<Integer> registeredKeys = null;
 
+	//The internal Raw instance
+	public Raw raw = new Raw();
+
 	/**
-	 * The internal debug class for the Input Driver
+	 * The debug class for the Input Driver
 	 * @author Jacob "HACKhalo2" Litewski
 	 */
 	public static class Debug {
@@ -50,8 +53,24 @@ public class InputDriver implements Subsystem {
 		public static void shouldUseKeyboardBuffer(final boolean flag) {
 			useInternalKeyboardBuffer = flag;
 		}
-		
+
 		//TODO: Add in switches for Mouse input and such
+
+	}
+
+	/**
+	 * The raw input class for the InputDriver. <br />
+	 * This is basically a wrapper around LWJGL's Keyboard class
+	 * @author Jacob "HACKhalo2" Litewski
+	 */
+	public class Raw {
+		public boolean isKeyPressed(int key) {
+			return Keyboard.isKeyDown(key);
+		}
+
+		public String getKeyName(int key) {
+			return Keyboard.getKeyName(key);
+		}
 	}
 
 	/**
@@ -63,7 +82,8 @@ public class InputDriver implements Subsystem {
 	 */
 	public boolean getCurrentKeyState(int key) {
 		if(this.registeredKeys.contains(key)) {
-			return this.bufferedOut.get(this.keyMap.get(key));
+			if(Debug.useInternalKeyboardBuffer) return this.bufferedOut.get(this.keyMap.get(key));
+			else return this.raw.isKeyPressed(key);
 		} else return false;
 	}
 
@@ -76,7 +96,8 @@ public class InputDriver implements Subsystem {
 	 */
 	public boolean getLastKeyState(int key) {
 		if(this.registeredKeys.contains(key)) {
-			return this.bufferedLast.get(this.keyMap.get(key));
+			if(Debug.useInternalKeyboardBuffer) return this.bufferedLast.get(this.keyMap.get(key));
+			else return false;
 		} else return false;
 	}
 
@@ -87,7 +108,7 @@ public class InputDriver implements Subsystem {
 	 */
 	public void registerKeys(int[] keys, boolean clearFlag) {
 		if(clearFlag) { //If the clearFlag is set, clear out the bufferedIn BitSet, the Map, and the Set for the new values
-			if(Debug.useInternalKeyboardBuffer)this.bufferedIn.clear();
+			this.bufferedIn.clear();
 			this.keyMap.clear();
 			this.registeredKeys.clear();
 		}
@@ -99,9 +120,9 @@ public class InputDriver implements Subsystem {
 			} else Main.log.debug("Key "+Keyboard.getKeyName(i.intValue())+" was already registered, skipping...", 0);
 		}
 	}
-	
+
 	/**
-	 * Get the Keyboard Keys the InputDriver is watching
+	 * Get the Keyboard Keys the InputDriver is watching.
 	 * @return The Unmodifiable Set of registered Keys
 	 */
 	public Set<Integer> getRegisteredKeys() {
@@ -141,19 +162,24 @@ public class InputDriver implements Subsystem {
 			this.bufferedOut = this.bufferedIn; //in to out
 			this.bufferedLast = tempOut; //out to last
 			this.bufferedIn = tempLast; //last to in
-		}
 
-		//Then store the current input
-		for(Integer i : this.registeredKeys) {
-			this.bufferedIn.set(this.keyMap.get(i), Keyboard.isKeyDown(i));
+			//Then store the current input
+			for(Integer i : this.registeredKeys) {
+				this.bufferedIn.set(this.keyMap.get(i), Keyboard.isKeyDown(i));
+			}
 		}
+		//If the internal buffer is disabled, don't do anything. 
+
 	}
 
 	@Override
-	public void preShutdown() {
-		this.bufferedIn.clear();
-		this.bufferedLast.clear();
-		this.bufferedOut.clear();
+	public void preShutdown() { 
+		if(Debug.useInternalKeyboardBuffer) {
+			this.bufferedIn.clear();
+			this.bufferedLast.clear();
+			this.bufferedOut.clear();
+		}
+		
 		this.keyMap.clear();
 		this.registeredKeys.clear();
 	}
