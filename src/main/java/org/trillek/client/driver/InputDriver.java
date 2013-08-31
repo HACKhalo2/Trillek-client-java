@@ -13,14 +13,13 @@ import org.lwjgl.input.Mouse;
 import org.trillek.client.Main;
 import org.trillek.client.Subsystem;
 import org.trillek.client.SubsystemManager;
+import org.trillek.client.event.MouseEvent;
 
 /**
  * The Input Driver for the Unofficial Java Trillek Client<br />
  * <br />
  * This class uses LWJGL's Keyboard and Mouse classes internally to process it's events.
  * @author Jacob "HACKhalo2" Litewski
- * <br />
- * TODO: Add in the code that doesn't rely on the KeyboardBuffer to test key bounces
  */
 public class InputDriver implements Subsystem {
 
@@ -30,13 +29,15 @@ public class InputDriver implements Subsystem {
 	//The internal BitSets to Buffer the Keyboard events to prevent key bounces
 	private BitSet bufferedIn = null, bufferedOut = null, bufferedLast = null;
 
-	//The Map for translating the BitSet index from the key index
+	//The Map for translating the BitSet index from the key index (for the keyboard)
 	private Map<Integer, Integer> keyMap = null;
 
-	//The Set of Registered Keys we are listening too
+	//The Set of Registered Keys we are listening too on the keyboard
 	private Set<Integer> registeredKeys = null;
 
-	//The internal Raw instance
+	private Map<MouseEvent, Integer> mouseEvents = null;
+
+	//The internal Raw keyboard instance
 	public Raw raw = new Raw();
 
 	/**
@@ -50,17 +51,25 @@ public class InputDriver implements Subsystem {
 		 */
 		protected static boolean useInternalKeyboardBuffer = true;
 
+		/**
+		 * Switch for if we should grab the mouse on initialization
+		 * Default: <b>True</b>
+		 */
+		protected static boolean isMouseGrabbed = true;
+
 		public static void shouldUseKeyboardBuffer(final boolean flag) {
 			useInternalKeyboardBuffer = flag;
 		}
 
-		//TODO: Add in switches for Mouse input and such
+		public static void shouldGrabMouse(final boolean flag) {
+			isMouseGrabbed = flag;
+		}
 
 	}
 
 	/**
 	 * The raw input class for the InputDriver. <br />
-	 * This is basically a wrapper around LWJGL's Keyboard class
+	 * This is basically a wrapper around LWJGL's Keyboard and Mouse classes
 	 * @author Jacob "HACKhalo2" Litewski
 	 */
 	public class Raw {
@@ -70,6 +79,17 @@ public class InputDriver implements Subsystem {
 
 		public String getKeyName(int key) {
 			return Keyboard.getKeyName(key);
+		}
+
+		public boolean isButtonPressed(int button) {
+			return Mouse.isButtonDown(button);
+		}
+
+		public String getButtonName(int button) {
+			final String name = Mouse.getButtonName(button);
+			if(name == null) {
+				return "Unnamed";
+			} else return name;
 		}
 	}
 
@@ -122,11 +142,17 @@ public class InputDriver implements Subsystem {
 	}
 
 	/**
-	 * Get the Keyboard Keys the InputDriver is watching.
-	 * @return The Unmodifiable Set of registered Keys
+	 * @return The Unmodifiable Set of registered Keyboard Keys
 	 */
 	public Set<Integer> getRegisteredKeys() {
 		return Collections.unmodifiableSet(this.registeredKeys);
+	}
+	
+	/**
+	 * @return The Unmodifiable Set of Mouse Events
+	 */
+	public Map<MouseEvent, Integer> getMouseEvents() {
+		return Collections.unmodifiableMap(this.mouseEvents);
 	}
 
 	@Override
@@ -151,6 +177,9 @@ public class InputDriver implements Subsystem {
 		this.keyMap = new TreeMap<Integer, Integer>();
 		this.registeredKeys = new TreeSet<Integer>();
 
+		//Set up the Mouse event map
+
+
 		Main.log.info("Done!", 0);
 	}
 
@@ -167,9 +196,20 @@ public class InputDriver implements Subsystem {
 			for(Integer i : this.registeredKeys) {
 				this.bufferedIn.set(this.keyMap.get(i), Keyboard.isKeyDown(i));
 			}
-		}
-		//If the internal buffer is disabled, don't do anything. 
+		} //If the internal buffer is disabled, don't do anything with keyboard input
 
+		//Populate the MouseEvent map (only if the mouse is grabbed)
+		if(Debug.isMouseGrabbed) { //XXX: it sucks that I have to do this by hand
+			this.mouseEvents.clear(); //Clear out the old data
+			this.mouseEvents.put(MouseEvent.CLICK_LEFT, (Mouse.isButtonDown(0) == true ? 1 : 0)); //Left click
+			this.mouseEvents.put(MouseEvent.CLICK_RIGHT, (Mouse.isButtonDown(1) == true ? 1 : 0)); //Right click
+			//TODO: Custom Mouse Button Assignments
+			this.mouseEvents.put(MouseEvent.X_POS, Mouse.getX()); //X position
+			this.mouseEvents.put(MouseEvent.Y_POS, Mouse.getY()); //Y position
+			this.mouseEvents.put(MouseEvent.DELTA_X, Mouse.getDX()); //Delta X
+			this.mouseEvents.put(MouseEvent.DELTA_Y, Mouse.getDY()); //Delta Y
+			this.mouseEvents.put(MouseEvent.DELTA_WHEEL, Mouse.getDWheel()); //Delta wheel
+		}
 	}
 
 	@Override
@@ -179,7 +219,7 @@ public class InputDriver implements Subsystem {
 			this.bufferedLast.clear();
 			this.bufferedOut.clear();
 		}
-		
+
 		this.keyMap.clear();
 		this.registeredKeys.clear();
 	}

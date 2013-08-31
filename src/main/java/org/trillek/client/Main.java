@@ -19,9 +19,9 @@ public class Main {
 		log.debug("Injecting Subsystems...", 0);
 		log.debug("Loading Graphic Driver '"+GraphicsDriver.INTERFACE_KEY+"'...", 1);
 		this.sSManager.load(GraphicsDriver.INTERFACE_KEY, new GraphicsDriver());
-		log.debug("Loading Input Driver '"+GraphicsDriver.INTERFACE_KEY+"'...", 1);
+		log.debug("Loading Input Driver '"+InputDriver.INTERFACE_KEY+"'...", 1);
 		this.sSManager.load(InputDriver.INTERFACE_KEY, new InputDriver());
-		log.debug("Loading Event Queue Driver '"+GraphicsDriver.INTERFACE_KEY+"'...", 1);
+		log.debug("Loading Event Queue Driver '"+EventQueueDriver.INTERFACE_KEY+"'...", 1);
 		this.sSManager.load(EventQueueDriver.INTERFACE_KEY, new EventQueueDriver());
 		log.debug("Done", 0);
 	}
