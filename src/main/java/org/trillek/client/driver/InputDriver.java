@@ -2,6 +2,7 @@ package org.trillek.client.driver;
 
 import java.util.BitSet;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -10,6 +11,7 @@ import java.util.TreeSet;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.trillek.client.Main;
 import org.trillek.client.Subsystem;
 import org.trillek.client.SubsystemManager;
@@ -65,6 +67,35 @@ public class InputDriver implements Subsystem {
 			isMouseGrabbed = flag;
 		}
 
+	}
+	
+	/**
+	 * Input handler for the Window. Wrapper around some of LWJGL's Display functions
+	 * @author Jacob "HACKhalo2" Litewski
+	 */
+	public static class WindowHandler {
+		/**
+		 * @return <b>True</b> if the window has been resized since the last tick, or<br />
+		 *  <b>False</b> if the window is running in fullscreen mode or hasn't been resized.<br />
+		 * <i>This value will be updated after a call to Display.update().</i>
+		 */
+		public static boolean resized() {
+			return Display.wasResized();
+		}
+		
+		/**
+		 * @return <b>True</b> if the window requested to be closed, <b>False</b> otherwise
+		 */
+		public static boolean closedRequested() {
+			return Display.isCloseRequested();
+		}
+		
+		/**
+		 * @return <b>True</b> if the window is both Active <i>and</i> Visible, <b>False</b> otherwise
+		 */
+		public static boolean isActive() {
+			return Display.isActive() && Display.isVisible();
+		}
 	}
 
 	/**
@@ -178,7 +209,7 @@ public class InputDriver implements Subsystem {
 		this.registeredKeys = new TreeSet<Integer>();
 
 		//Set up the Mouse event map
-
+		this.mouseEvents = new HashMap<MouseEvent, Integer>();
 
 		Main.log.info("Done!", 0);
 	}
@@ -200,7 +231,7 @@ public class InputDriver implements Subsystem {
 
 		//Populate the MouseEvent map (only if the mouse is grabbed)
 		if(Debug.isMouseGrabbed) { //XXX: it sucks that I have to do this by hand
-			this.mouseEvents.clear(); //Clear out the old data
+			if(!this.mouseEvents.isEmpty()) this.mouseEvents.clear(); //Clear out the old data if it's not empty
 			this.mouseEvents.put(MouseEvent.CLICK_LEFT, (Mouse.isButtonDown(0) == true ? 1 : 0)); //Left click
 			this.mouseEvents.put(MouseEvent.CLICK_RIGHT, (Mouse.isButtonDown(1) == true ? 1 : 0)); //Right click
 			//TODO: Custom Mouse Button Assignments

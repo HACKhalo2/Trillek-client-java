@@ -16,16 +16,27 @@ public class EventQueueDriver implements Subsystem {
 
 	@Override
 	public void tick() {
-		//Very Basic Event Loop
+		//Process Window events
+		if(InputDriver.WindowHandler.closedRequested()) {
+			Main.log.debug("Shutting down", 1);
+			GraphicsDriver.setRunning(false);
+			return;
+		}
+		
+		//Process Keyboard events
 		for(int key : this.input.getRegisteredKeys()) {
 			if(this.input.getCurrentKeyState(key)) {
 				Main.log.debug("Key Pressed: "+Keyboard.getKeyName(key), 0);
 				if(key == Keyboard.KEY_ESCAPE) {
 					Main.log.debug("Shutting down", 1);
 					GraphicsDriver.setRunning(false);
+					return;
 				}
 			}
 		}
+		
+		//Process Mouse Events
+		
 	}
 
 	@Override
