@@ -1,6 +1,7 @@
 package org.trillek.client.driver;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
 import org.trillek.client.Main;
 import org.trillek.client.Subsystem;
 import org.trillek.client.SubsystemManager;
@@ -17,7 +18,7 @@ public class EventQueueDriver implements Subsystem {
 	@Override
 	public void tick() {
 		//Process Window events
-		if(InputDriver.WindowHandler.closedRequested()) {
+		if(Display.isCloseRequested()) {
 			Main.log.debug("Shutting down", 1);
 			GraphicsDriver.setRunning(false);
 			return;
@@ -27,10 +28,14 @@ public class EventQueueDriver implements Subsystem {
 		for(int key : this.input.getRegisteredKeys()) {
 			if(this.input.getCurrentKeyState(key)) {
 				Main.log.debug("Key Pressed: "+Keyboard.getKeyName(key), 0);
-				if(key == Keyboard.KEY_ESCAPE) {
+				
+				switch(key) {
+				case Keyboard.KEY_ESCAPE:
 					Main.log.debug("Shutting down", 1);
 					GraphicsDriver.setRunning(false);
 					return;
+				default:
+					continue;
 				}
 			}
 		}
@@ -42,7 +47,6 @@ public class EventQueueDriver implements Subsystem {
 	@Override
 	public void preShutdown() {
 		this.input = null;
-
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import java.util.TreeSet;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.Display;
 import org.trillek.client.Main;
 import org.trillek.client.Subsystem;
 import org.trillek.client.SubsystemManager;
@@ -67,35 +66,6 @@ public class InputDriver implements Subsystem {
 			isMouseGrabbed = flag;
 		}
 
-	}
-	
-	/**
-	 * Input handler for the Window. Wrapper around some of LWJGL's Display functions
-	 * @author Jacob "HACKhalo2" Litewski
-	 */
-	public static class WindowHandler {
-		/**
-		 * @return <b>True</b> if the window has been resized since the last tick, or<br />
-		 *  <b>False</b> if the window is running in fullscreen mode or hasn't been resized.<br />
-		 * <i>This value will be updated after a call to Display.update().</i>
-		 */
-		public static boolean resized() {
-			return Display.wasResized();
-		}
-		
-		/**
-		 * @return <b>True</b> if the window requested to be closed, <b>False</b> otherwise
-		 */
-		public static boolean closedRequested() {
-			return Display.isCloseRequested();
-		}
-		
-		/**
-		 * @return <b>True</b> if the window is both Active <i>and</i> Visible, <b>False</b> otherwise
-		 */
-		public static boolean isActive() {
-			return Display.isActive() && Display.isVisible();
-		}
 	}
 
 	/**
