@@ -1,5 +1,7 @@
 package org.trillek.client.entity.component;
 
-public class Component {
+public interface Component {
+	
+	public ComponentType getType();
 
 }
