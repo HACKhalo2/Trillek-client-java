@@ -19,7 +19,7 @@ public class SubsystemManager {
 	
 	public void tick() {
 		for(Subsystem s : this.interfaceMap.values()) {
-			s.tick();
+			s.tick(this);
 		}
 	}
 	

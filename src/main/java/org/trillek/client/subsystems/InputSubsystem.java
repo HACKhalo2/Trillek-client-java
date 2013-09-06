@@ -1,4 +1,4 @@
-package org.trillek.client.driver;
+package org.trillek.client.subsystems;
 
 import java.util.BitSet;
 import java.util.Collections;
@@ -22,7 +22,7 @@ import org.trillek.client.event.MouseEvent;
  * This class uses LWJGL's Keyboard and Mouse classes internally to process it's events.
  * @author Jacob "HACKhalo2" Litewski
  */
-public class InputDriver implements Subsystem {
+public class InputSubsystem implements Subsystem {
 
 	//The name we pass to the SubsystemManager as the key
 	public static final String INTERFACE_KEY = "Default Input Driver";
@@ -185,7 +185,7 @@ public class InputDriver implements Subsystem {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(SubsystemManager manager) {
 		//First, swap the bitsets around if the internal buffer is enabled
 		if(Debug.useInternalKeyboardBuffer) {
 			BitSet tempOut = this.bufferedOut, tempLast = this.bufferedLast;

@@ -1,10 +1,10 @@
-package org.trillek.client.driver;
+package org.trillek.client.subsystems;
 
 import org.lwjgl.opengl.GL11;
 import org.trillek.client.Subsystem;
 import org.trillek.client.SubsystemManager;
 
-public class GraphicsDriver implements Subsystem {
+public class GraphicsSubsystem implements Subsystem {
 	public static final String INTERFACE_KEY = "Default Graphics Driver";
 	protected static boolean running = false;
 	
@@ -22,7 +22,7 @@ public class GraphicsDriver implements Subsystem {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(SubsystemManager manager) {
 		GL11.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}

@@ -1,10 +1,9 @@
-package org.trillek.client.driver;
+package org.trillek.client.subsystems;
 
 import org.trillek.client.Subsystem;
 import org.trillek.client.SubsystemManager;
 
-//TODO: Implement a basic Audio Layer built on Pual's SoundSystem
-public class AudioDriver implements Subsystem {
+public class EntitySubsystem implements Subsystem {
 
 	@Override
 	public void init(SubsystemManager manager) {
@@ -13,7 +12,7 @@ public class AudioDriver implements Subsystem {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(SubsystemManager manager) {
 		// TODO Auto-generated method stub
 
 	}

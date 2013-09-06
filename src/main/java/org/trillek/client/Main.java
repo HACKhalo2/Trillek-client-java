@@ -7,9 +7,9 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLContext;
 import org.lwjgl.opengl.PixelFormat;
-import org.trillek.client.driver.EventQueueDriver;
-import org.trillek.client.driver.GraphicsDriver;
-import org.trillek.client.driver.InputDriver;
+import org.trillek.client.subsystems.EventQueueSubsystem;
+import org.trillek.client.subsystems.GraphicsSubsystem;
+import org.trillek.client.subsystems.InputSubsystem;
 
 public class Main {
 	public static LogFormatter log = LogFormatter.getInstance(true);
@@ -17,12 +17,12 @@ public class Main {
 	
 	private void loadSubsystems() {
 		log.debug("Injecting Subsystems...", 0);
-		log.debug("Loading Graphic Driver '"+GraphicsDriver.INTERFACE_KEY+"'...", 1);
-		this.sSManager.load(GraphicsDriver.INTERFACE_KEY, new GraphicsDriver());
-		log.debug("Loading Input Driver '"+InputDriver.INTERFACE_KEY+"'...", 1);
-		this.sSManager.load(InputDriver.INTERFACE_KEY, new InputDriver());
-		log.debug("Loading Event Queue Driver '"+EventQueueDriver.INTERFACE_KEY+"'...", 1);
-		this.sSManager.load(EventQueueDriver.INTERFACE_KEY, new EventQueueDriver());
+		log.debug("Loading Graphic Driver '"+GraphicsSubsystem.INTERFACE_KEY+"'...", 1);
+		this.sSManager.load(GraphicsSubsystem.INTERFACE_KEY, new GraphicsSubsystem());
+		log.debug("Loading Input Driver '"+InputSubsystem.INTERFACE_KEY+"'...", 1);
+		this.sSManager.load(InputSubsystem.INTERFACE_KEY, new InputSubsystem());
+		log.debug("Loading Event Queue Driver '"+EventQueueSubsystem.INTERFACE_KEY+"'...", 1);
+		this.sSManager.load(EventQueueSubsystem.INTERFACE_KEY, new EventQueueSubsystem());
 		log.debug("Done", 0);
 	}
 	
@@ -36,10 +36,10 @@ public class Main {
 				Keyboard.KEY_UP,
 				Keyboard.KEY_DOWN
 		};
-		((InputDriver)this.sSManager.lookup(InputDriver.INTERFACE_KEY)).registerKeys(keys, false);
+		((InputSubsystem)this.sSManager.lookup(InputSubsystem.INTERFACE_KEY)).registerKeys(keys, false);
 		
 		//Main Loop
-		while(GraphicsDriver.isRunning()) {
+		while(GraphicsSubsystem.isRunning()) {
 			this.sSManager.tick(); //Tick everything
 			
 			//Handle Window Resizes
