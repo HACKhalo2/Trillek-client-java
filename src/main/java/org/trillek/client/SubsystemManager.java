@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class SubsystemManager {
 	private Map<String, Subsystem> interfaceMap = new HashMap<String, Subsystem>();
+	private static boolean shutdownMode = false;
 	
 	protected SubsystemManager() { }
 	
@@ -24,6 +25,7 @@ public class SubsystemManager {
 	}
 	
 	public void preShutdown() {
+		shutdownMode = true;
 		for(Subsystem s : this.interfaceMap.values()) {
 			s.preShutdown();
 		}
@@ -46,6 +48,14 @@ public class SubsystemManager {
 	public Subsystem lookup(final String key) {
 		if(this.interfaceMap.containsKey(key)) return this.interfaceMap.get(key);
 		else return null;
+	}
+	
+	/**
+	 * Simple check to see if the Client is getting ready for shutdown.
+	 * @return True if the shutdown signal was set, False otherwise.
+	 */
+	public static boolean inShutdownMode() {
+		return shutdownMode;
 	}
 
 }

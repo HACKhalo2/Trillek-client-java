@@ -7,14 +7,9 @@ import org.trillek.client.entity.component.Component;
 import org.trillek.client.entity.component.ComponentType;
 
 public class Entity {
-
-	private final int guid;
-
 	private Map<ComponentType, Component> components = new HashMap<ComponentType, Component>();
 
-	protected Entity(final int guid) {
-		this.guid = guid;
-	}
+	protected Entity() { }
 
 	/**
 	 * Installs the Given component into the Entity if one doesn't already exist.
@@ -65,10 +60,6 @@ public class Entity {
 			assert this.components.containsKey(type) == false; //XXX: Assert that the key is not in the HashMap
 			return true;
 		} else return false;
-	}
-
-	public int getGUID() {
-		return this.guid;
 	}
 
 }

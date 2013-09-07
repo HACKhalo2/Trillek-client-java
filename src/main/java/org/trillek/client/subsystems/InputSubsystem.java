@@ -148,7 +148,7 @@ public class InputSubsystem implements Subsystem {
 	public Set<Integer> getRegisteredKeys() {
 		return Collections.unmodifiableSet(this.registeredKeys);
 	}
-	
+
 	/**
 	 * @return The Unmodifiable Set of Mouse Events
 	 */
@@ -214,24 +214,28 @@ public class InputSubsystem implements Subsystem {
 	}
 
 	@Override
-	public void preShutdown() { 
-		if(Debug.useInternalKeyboardBuffer) {
-			this.bufferedIn.clear();
-			this.bufferedLast.clear();
-			this.bufferedOut.clear();
-		}
+	public void preShutdown() {
+		if(SubsystemManager.inShutdownMode()) {
+			if(Debug.useInternalKeyboardBuffer) {
+				this.bufferedIn.clear();
+				this.bufferedLast.clear();
+				this.bufferedOut.clear();
+			}
 
-		this.keyMap.clear();
-		this.registeredKeys.clear();
+			this.keyMap.clear();
+			this.registeredKeys.clear();
+		}
 	}
 
 	@Override
 	public void shutdown() {
-		this.bufferedIn = null;
-		this.bufferedLast = null;
-		this.bufferedOut = null;
-		this.keyMap = null;
-		this.registeredKeys = null;
+		if(SubsystemManager.inShutdownMode()) {
+			this.bufferedIn = null;
+			this.bufferedLast = null;
+			this.bufferedOut = null;
+			this.keyMap = null;
+			this.registeredKeys = null;
+		}
 	}
 
 }
