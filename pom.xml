@@ -6,12 +6,32 @@
 	<version>m1</version>
 	<name>Trillek Client</name>
 	<description>Unofficial Java port of the Official Trillek Client</description>
+	<inceptionYear>2013</inceptionYear>
+	<url>https://github.com/HACKhalo2/Trillek-client-java</url>
+	
+	<scm> <!-- Github Connector -->
+	    <connection>scm:git:git://github.com/HACKhalo2/Trillek-client-java.git</connection>
+	    <developerConnection>scm:git:ssh://git@github.com/HACKhalo2/Trillek-client-java.git</developerConnection>
+	    <url>https://github.com/HACKhalo2/Trillek-client-java</url>
+	</scm>
+	
+	<developers>
+	    <developer>
+	        <name>Jacob "HACKhalo2" Litewski</name>
+	        <email>jacob.litewski@gmail.com</email>
+	        <roles>
+	            <role>Main Developer</role>
+	            <role>Github Repository Maintainer</role>
+	            <role>Github Issue Maintainer</role>
+	        </roles>
+	    </developer>
+	</developers>
 
 	<licenses>
 		<license>
 			<name>GNU Lesser General Public License version 3</name>
 			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
-			<comments>For the Core Client code</comments>
+			<comments>For the Core Client code and the JOrbis Codex</comments>
 		</license>
 		<license>
 		    <name>MIT License</name>
@@ -21,7 +41,11 @@
 		<license>
 		    <name>BSD 3-Clause License (Revised)</name>
 		    <url>http://www.opensource.org/licenses/BSD-3-Clause</url>
-		    <comments>For the Google ProtoBuf Library</comments>
+		    <comments>For the Google ProtoBuf Library and IBXM Codex</comments>
+		</license>
+		<license>
+		    <name>BSD XIPH Variant License</name>
+		    <comments>For the Speex Codex</comments>
 		</license>
 		<license>
 		    <name>Light Weight Java Game Library (LWJGL) License</name>
@@ -32,6 +56,11 @@
 		    <name>Paulscode License</name>
 		    <url>http://www.paulscode.com/forum/index.php?topic=4.msg6#msg6</url>
 		    <comments>For Paul's 3D SoundSystem Library</comments>
+		</license>
+		<license>
+		    <name>JOgg License</name>
+		    <url>http://www.j-ogg.de/</url>
+		    <comments>For the JOgg Codex</comments>
 		</license>
 	</licenses>
 
@@ -69,23 +98,27 @@
 	</dependencies>
 
 	<build>
+	    <defaultGoal>clean compile</defaultGoal>
 	    <finalName>${project.artifactId}-${project.version}.jar</finalName>
 	    <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
+	    <testOutputDirectory>target/test</testOutputDirectory>
 	    
 	    <resources>
-	        <resource>
+	        <resource> <!-- Include the Licenses for the different libraries -->
 	            <targetPath>licenses</targetPath>
 	            <filtering>true</filtering>
-	            <directory>${basedir}/src/main/resources/</directory>
+	            <directory>${basedir}/src/main/resources/licenses</directory>
 	            <includes>
-	                <!-- Include the Licenses for the different libraries -->
 	                <include>paulscode.license</include>
+	                <include>jogg.license</include>
 	                <include>lwjgl.license</include>
 	                <include>bsd3.license</include>
+	                <include>bsd.xiph.license</include>
 	                <include>lgpl3.license</include>
 	                <include>mit.license</include>
 	            </includes>
 	        </resource>
+	        
 	    </resources>
 	    
 		<plugins>
