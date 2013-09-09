@@ -1,15 +1,29 @@
 package org.trillek.client.entity;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.trillek.client.entity.component.Component;
 import org.trillek.client.entity.component.ComponentType;
 
 public class Entity {
-	private Map<ComponentType, Component> components = new HashMap<ComponentType, Component>();
+	private Map<ComponentType, Component> components;
+	private final int spawnID;
 
-	protected Entity() { }
+	protected Entity(final int spawnID) {
+		this.components = new HashMap<ComponentType, Component>();
+		this.spawnID = spawnID;
+	}
+	
+	/**
+	 * Returns the Spawn ID for this Entity.
+	 * @return the Spawn ID
+	 */
+	protected int getSpawnID() {
+		return this.spawnID;
+	}
 
 	/**
 	 * Installs the Given component into the Entity if one doesn't already exist.
@@ -17,7 +31,7 @@ public class Entity {
 	 * @param component The Component to install;
 	 * @return True if the Component was installed, False otherwise.
 	 */
-	public boolean installComponent(ComponentType type, Component component) {
+	protected boolean installComponent(ComponentType type, Component component) {
 		if(!this.hasComponent(type)) {
 			//Check to make sure we don't place a Component into a ComponentType that isn't compatible
 			if(component.getType().equals(type)) {
@@ -53,13 +67,27 @@ public class Entity {
 	 * @param type The ComponentType to uninstall
 	 * @return True if the Component was uninstalled, False otherwise.
 	 */
-	public boolean uninstallComponent(ComponentType type) {
+	protected boolean uninstallComponent(ComponentType type) {
 		if(this.hasComponent(type)) {
 			this.getComponent(type).cleanup(); //Cleanup the Component
 			this.components.remove(type);
 			assert this.components.containsKey(type) == false; //XXX: Assert that the key is not in the HashMap
 			return true;
 		} else return false;
+	}
+	
+	/**
+	 * Gets the unmodifiable set of ComponentTypes this Entity has installed.
+	 * @return the unmodifiable set of ComponentTypes
+	 */
+	protected Set<ComponentType> getInstalledComponents() {
+		return Collections.unmodifiableSet(this.components.keySet());
+	}
+	 /**
+	  * Clean this Entities Component Map of all Keypairs stored.
+	  */
+	protected void clean() {
+		this.components.clear();
 	}
 
 }

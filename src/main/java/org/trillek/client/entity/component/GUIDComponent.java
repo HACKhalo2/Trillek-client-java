@@ -2,7 +2,7 @@ package org.trillek.client.entity.component;
 
 public class GUIDComponent implements Component {
 	
-	private final String guid;
+	private String guid;
 	
 	public GUIDComponent(final String guid) {
 		this.guid = guid;
@@ -18,6 +18,8 @@ public class GUIDComponent implements Component {
 	}
 
 	@Override
-	public void cleanup() { }
+	public void cleanup() {
+		this.guid = null;
+	}
 
 }

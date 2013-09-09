@@ -20,10 +20,6 @@ public class EntitySubsystem implements Subsystem {
 		if(this.guidMap.containsKey(guid)) return this.guidMap.get(guid);
 		return null;
 	}
-	
-	public Entity createEntity(final String name) {
-		return null;
-	}
 
 	@Override
 	public void init(SubsystemManager manager) {

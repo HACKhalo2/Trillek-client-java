@@ -22,6 +22,10 @@ public enum ComponentType {
 	 */
 	GUID,
 	/**
+	 * Defines a Name Component. The Name is a Human Readable representation of the Entity (i.e. "GUI_HealthBar" for the Health Bar)
+	 */
+	NAME,
+	/**
 	 * Defines a Bad Component. This is only used internally for the junit testing
 	 */
 	BAD;
