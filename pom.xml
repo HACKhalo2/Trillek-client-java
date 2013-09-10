@@ -135,8 +135,6 @@
 				<version>2.16</version>
 				<configuration>
 				    <workingDirectory>${basedir}/src/test/java</workingDirectory>
-					<parallel>methods</parallel>
-					<threadCount>4</threadCount>
 				</configuration>
 			</plugin>
 

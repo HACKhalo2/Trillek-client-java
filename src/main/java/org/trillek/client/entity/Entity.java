@@ -1,7 +1,7 @@
 package org.trillek.client.entity;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +32,7 @@ public class Entity {
 	 * @return True if the Component was installed, False otherwise.
 	 */
 	protected boolean installComponent(ComponentType type, Component component) {
-		if(!this.hasComponent(type)) {
+		if(!this.hasComponent(type) && type != ComponentType.BAD) { //Make sure we don't install the bad component
 			//Check to make sure we don't place a Component into a ComponentType that isn't compatible
 			if(component.getType().equals(type)) {
 				this.components.put(type, component); //Add the component
@@ -77,11 +77,11 @@ public class Entity {
 	}
 	
 	/**
-	 * Gets the unmodifiable set of ComponentTypes this Entity has installed.
-	 * @return the unmodifiable set of ComponentTypes
+	 * Gets the set of ComponentTypes this Entity has installed.
+	 * @return the set of ComponentTypes
 	 */
 	protected Set<ComponentType> getInstalledComponents() {
-		return Collections.unmodifiableSet(this.components.keySet());
+		return new HashSet<ComponentType>(this.components.keySet());
 	}
 	 /**
 	  * Clean this Entities Component Map of all Keypairs stored.
